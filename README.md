@@ -4,6 +4,7 @@
 
 > [!WARNING]
 > This repository does **not** contain pretrained weights, training data, private calibration results, or deployment parameters. All numeric rule parameters in `configs/public_placeholder.yaml` are randomly generated placeholders marked `needs_to_be_finetuned: true`. They are not clinically meaningful and must not be used for diagnosis or challenge submission.
+> The model weights& parameters will only be disclosed upon private request.
 
 ## Pipeline
 
