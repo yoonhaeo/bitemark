@@ -41,3 +41,10 @@ default case changed to a synthetic identifier already overridden by the adapter
 unused case-level calibration records removed; model manifest regenerated.
 Numerical inference code, required calibration values and trained weight bytes
 are retained. Packaging and reproduction helpers are new AGPL-covered Bitemark code.
+
+The `training/` Bitemark sources are also covered by GNU AGPL-3.0. Their recovered
+source hashes and adaptations are documented in `training/provenance/sources.json`
+and `training/README.md`. The earlier Wilson cohort profile is reconstructed from
+archived results, not represented as an original archived trainer. Upstream
+3DTeethLand training is linked separately with its original attribution and terms.
+No dataset redistribution rights or patient-level training records are included.

@@ -1,4 +1,4 @@
-# Bitemark — final2 inference release
+# Bitemark — final2 inference and training
 
 Bitemark generates structured orthodontic reports from intraoral photographs (IOPs)
 and paired intraoral scans (IOSs). This release contains the **actual final2
@@ -9,6 +9,7 @@ test-phase inference code, calibrated rules, and all nine checkpoint files**.
  · [License and third-party notices](NOTICE.md)
  · [Checkpoint manifest](release/weights.json)
  · [Release provenance](release/provenance.json)
+ · [Training code, datasets and recipes](training/README.md)
 
 ## Included components
 
@@ -90,6 +91,18 @@ To install an archive downloaded in a browser:
 python tools/download_models.py --archive /path/to/bitemark-final2-model.tar.gz
 ```
 
+## Training
+
+The [training guide](training/README.md) maps every final2 checkpoint to its data
+source, initialization, split, training recipe and checkpoint selection. It includes
+the recovered view, crowding, YOLO segmentation and PTv3 training scripts, data
+preparation tools, and upstream 3DTeethLand training references.
+
+The final PTv3 models were trained from scratch. The earlier Wilson cohort profile
+is explicitly marked as reconstructed. Original reviewed labels and authorized
+datasets are required for historical training reproduction and are not redistributed.
+The published final2 weights and inference sources remain unchanged.
+
 ## Source layout and reproducibility boundaries
 
 - `submission/`: original final2 Grand Challenge adapter, Dockerfile, pinned
@@ -101,6 +114,8 @@ python tools/download_models.py --archive /path/to/bitemark-final2-model.tar.gz
   tooth-ROI helpers and actual canine calibration assets.
 - `tools/`: checksum-verified model download, bundle reconstruction and input staging.
 - `release/`: original checkpoint hashes, public bundle integrity and provenance.
+- `training/`: recovered trainers, data preparation, per-weight provenance and
+  instructions, with documented reconstruction limits.
 - `src/bitemark`, `configs/public_placeholder.yaml`, `Dockerfile`: **legacy synthetic
   demonstration only**, not final2 inference. See `docs/LEGACY.md`.
 
@@ -111,7 +126,8 @@ value is retained. The adapter already substitutes a temporary case identifier
 and runtime paths. No external prediction cache, patient report or ground-truth
 file is needed at inference time.
 
-This is an **inference reproduction release**.
+The tagged `v1.0.0-final2` asset is the **inference reproduction release**;
+current `main` additionally contains the training sources above.
 Obtain evaluation inputs through their
 authorized providers. Without the organizers' hidden inputs and evaluator, this
 repository cannot independently reproduce or verify a leaderboard score.
