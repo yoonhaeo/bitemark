@@ -3,7 +3,7 @@
 Bitemark generates structured orthodontic reports from intraoral photographs (IOPs)
 and paired intraoral scans (IOSs). This release contains the **actual final2
 test-phase inference code, calibrated rules, and all nine checkpoint files**.
-It supersedes the earlier sanitized skeleton and private-request-only weight policy.
+
 
 **[Download final2 models](https://github.com/yoonhaeo/bitemark/releases/tag/v1.0.0-final2)**
  · [License and third-party notices](NOTICE.md)
