@@ -1,5 +1,7 @@
 FROM python:3.11-slim
 
+# LEGACY SYNTHETIC DEMO ONLY. Actual final2: docker build -t bitemark:final2 submission
+
 WORKDIR /opt/bitemark
 COPY pyproject.toml README.md LICENSE ./
 COPY src ./src

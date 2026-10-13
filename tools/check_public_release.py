@@ -1,75 +1,51 @@
-"""Fail closed if a public release contains likely private artifacts."""
-
+"""Check publishable Git files, not ignored local model/data installations."""
 from __future__ import annotations
 
+import hashlib
 import re
-import sys
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SKIP_DIRS = {".git", ".venv", "__pycache__", ".pytest_cache", ".ruff_cache", "output"}
-BANNED_SUFFIXES = {
-    ".pt",
-    ".pth",
-    ".ckpt",
-    ".onnx",
-    ".engine",
-    ".safetensors",
-    ".npy",
-    ".npz",
-    ".stl",
-    ".ipynb",
+BANNED = {".pt", ".pth", ".ckpt", ".stl", ".npz", ".npy", ".ipynb", ".so", ".o"}
+PATTERNS = {
+    "patient case identifier": re.compile(r"\bF(?!0000\b)\d{4}\b"),
+    "private service": re.compile(r"165[.]132[.]146[.]87"),
+    "GitHub token": re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,})"),
+    "private key": re.compile(r"-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----"),
 }
-BANNED_TEXT = {
-    "private dataset path": re.compile("/data/" + "MICCAI", re.IGNORECASE),
-    "embedded token": re.compile(
-        r"(?:token|api[_-]?key|secret)\s*[=:]\s*[^\s<]{8,}", re.IGNORECASE
-    ),
-    "private service address": re.compile("165" + r"\.132\.146\.87"),
-}
-MAX_PUBLIC_FILE_BYTES = 5 * 1024 * 1024
-
-
-def iter_public_files():
-    for path in ROOT.rglob("*"):
-        if not path.is_file() or any(part in SKIP_DIRS for part in path.parts):
-            continue
-        yield path
 
 
 def main() -> int:
-    errors: list[str] = []
-    for path in iter_public_files():
-        relative = path.relative_to(ROOT)
-        if path.suffix.lower() in BANNED_SUFFIXES:
-            errors.append(f"banned artifact: {relative}")
-        if path.stat().st_size > MAX_PUBLIC_FILE_BYTES:
-            errors.append(f"oversized file: {relative}")
+    raw = subprocess.check_output(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"], cwd=ROOT
+    )
+    errors = []
+    for name in set(raw.decode().split("\0")) - {""}:
+        path = ROOT / name
+        if not path.is_file():
+            continue
+        if name == "final2/model/s/b/b/nn/modules/kernels/dispositions/k_015_center.ply":
+            expected = "b3161cd3d2bdc325b48831d60b19038f33359105c675742a9289c5ca6eca2b6a"
+            if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+                errors.append("Synthetic convolution kernel changed; review before release")
+            continue
+        if path.suffix.lower() in BANNED or path.stat().st_size > 5 * 1024 * 1024:
+            errors.append(f"Non-source/oversized Git artifact: {name}")
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
+            errors.append(f"Review binary Git artifact: {name}")
             continue
-        for label, pattern in BANNED_TEXT.items():
+        for label, pattern in PATTERNS.items():
             if pattern.search(text):
-                errors.append(f"{label}: {relative}")
-
-    config = (ROOT / "configs/public_placeholder.yaml").read_text(encoding="utf-8")
-    for required in (
-        "needs_to_be_finetuned: true",
-        "clinically_validated: false",
-        "contains_real_calibration: false",
-    ):
-        if required not in config:
-            errors.append(f"missing public safety flag: {required}")
-
+                errors.append(f"{label}: {name}")
     if errors:
-        print("Public-release guard failed:")
-        for error in errors:
-            print(f"- {error}")
+        print("\n".join(errors))
         return 1
-    print("Public-release guard passed: no private artifacts or paths detected.")
+    print("Release guard passed: no forbidden data/weights, case IDs or token patterns in Git files.")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

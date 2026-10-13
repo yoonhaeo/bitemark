@@ -8,7 +8,7 @@ dist/
 build/
 *.egg-info/
 
-# Private models and datasets (never commit)
+# Weights are distributed as release assets; never put data or weights in Git.
 models/**/*
 !models/README.md
 weights/
@@ -42,3 +42,8 @@ experiments/private/
 *.key
 credentials*
 secrets*
+
+input/
+*.tar.gz
+*.zip
+*.log

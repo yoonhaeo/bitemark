@@ -1,5 +1,9 @@
 # Public architecture map
 
+> Historical synthetic-skeleton documentation, retained for compatibility. For
+> the complete public final2 implementation and weights, see the root README.
+> References below to private components describe the old release, not final2.
+
 This document describes interfaces and information flow only. It omits private weights, validation-selected parameters, dataset locations, and corpus-optimized report wording.
 
 | Finding | Primary input | Representation | Public decision interface |
