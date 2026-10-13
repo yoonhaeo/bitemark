@@ -111,9 +111,8 @@ value is retained. The adapter already substitutes a temporary case identifier
 and runtime paths. No external prediction cache, patient report or ground-truth
 file is needed at inference time.
 
-This is an **inference reproduction release**, not a from-scratch training release.
-Training images, scans, patient reports, hidden test data and patient-specific
-predictions are not redistributed. Obtain evaluation inputs through their
+This is an **inference reproduction release**.
+Obtain evaluation inputs through their
 authorized providers. Without the organizers' hidden inputs and evaluator, this
 repository cannot independently reproduce or verify a leaderboard score.
 
@@ -122,15 +121,14 @@ staging and CPU unit tests. **A fresh end-to-end CUDA execution of this public
 repackaging has not been verified.** The Dockerfile and pinned requirements are
 from the submitted package, but upstream package availability, base-image updates,
 GPU kernels and hardware can affect rebuilding and numerical reproducibility.
-No new accuracy or bitwise-output-equivalence claim is made.
+
 
 ## License
 
 Bitemark's combined final2 inference release and Bitemark-owned checkpoints are
 provided under **GNU AGPL-3.0**. Preserve the license and corresponding source
 when distributing covered works, and satisfy the AGPL source-offer requirement
-when applicable to modified network-served versions. Do not add a blanket
-non-commercial restriction to this AGPL distribution.
+when applicable to modified network-served versions. 
 
 Third-party components retain their own notices and applicable licenses.
 3DTeethLand checkpoints are credited to their upstream authors, not claimed as
