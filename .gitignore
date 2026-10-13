@@ -47,3 +47,9 @@ input/
 *.tar.gz
 *.zip
 *.log
+
+# Third-party Python source package, not patient data.
+!final2/model/s/b/b/data/
+!final2/model/s/b/b/data/**
+# Fixed upstream ScanNet class-mean metadata (not a dental scan/patient file).
+!final2/model/s/a/pointcept/datasets/preprocessing/scannet/meta_data/scannet_means.npz

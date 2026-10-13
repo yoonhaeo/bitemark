@@ -14,6 +14,12 @@ PATTERNS = {
     "GitHub token": re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,})"),
     "private key": re.compile(r"-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----"),
 }
+UPSTREAM_BINARY_HASHES = {
+    "final2/model/s/b/b/nn/modules/kernels/dispositions/k_015_center.ply":
+        "b3161cd3d2bdc325b48831d60b19038f33359105c675742a9289c5ca6eca2b6a",
+    "final2/model/s/a/pointcept/datasets/preprocessing/scannet/meta_data/scannet_means.npz":
+        "df5c2bd40e8518e982c7d7b4b39020b07ac774695038bf49cb28b44e5760457e",
+}
 
 
 def main() -> int:
@@ -25,10 +31,9 @@ def main() -> int:
         path = ROOT / name
         if not path.is_file():
             continue
-        if name == "final2/model/s/b/b/nn/modules/kernels/dispositions/k_015_center.ply":
-            expected = "b3161cd3d2bdc325b48831d60b19038f33359105c675742a9289c5ca6eca2b6a"
-            if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
-                errors.append("Synthetic convolution kernel changed; review before release")
+        if name in UPSTREAM_BINARY_HASHES:
+            if hashlib.sha256(path.read_bytes()).hexdigest() != UPSTREAM_BINARY_HASHES[name]:
+                errors.append(f"Upstream binary metadata changed; review before release: {name}")
             continue
         if path.suffix.lower() in BANNED or path.stat().st_size > 5 * 1024 * 1024:
             errors.append(f"Non-source/oversized Git artifact: {name}")
