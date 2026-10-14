@@ -1,4 +1,4 @@
-# Bitemark — final2 inference and training
+# Bitemark — final2 Training and Inference
 
 Bitemark generates structured orthodontic reports from intraoral photographs (IOPs)
 and paired intraoral scans (IOSs). This release contains the **actual final2
